@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Solar Tank Temperature Simulator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Solar Tank Temperature Simulator</h1>
+
+<div id="input-form">
+    <div class="form-row">
+        <div class="form-group">
+            <label for="panelArea">Panel area (m²)</label>
+            <input id="panelArea" type="number" step="0.1" value="4">
+        </div>
+        <div class="form-group">
+            <label for="tankVolume">Tank volume (Liter)</label>
+            <input id="tankVolume" type="number" step="10" value="200">
+        </div>
+        <div class="form-group">
+            <label for="avgTemp">Daily average ambient temperature (°C)</label>
+            <input id="avgTemp" type="number" step="0.1" value="15">
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="sunHours">Daily sun duration (hours)</label>
+            <input id="sunHours" type="number" step="0.1" value="6">
+        </div>
+        <div class="form-group">
+            <label for="days">Simulation duration (days, max 30)</label>
+            <input id="days" type="number" step="1" value="5">
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="baseEfficiency">Base panel efficiency (0–1)</label>
+            <input id="baseEfficiency" type="number" step="0.01" value="0.80">
+        </div>
+        <div class="form-group">
+            <label for="peakIrradiance">Peak solar irradiance (W/m²)</label>
+            <input id="peakIrradiance" type="number" step="10" value="900">
+        </div>
+        <div class="form-group">
+            <label for="baseLoss">Base tank heat loss coefficient</label>
+            <input id="baseLoss" type="number" step="0.1" value="4">
+        </div>
+    </div>
+
+    <button id="runButton">Run Simulation</button>
+    <div id="error-message"></div>
+</div>
+
+<canvas id="tempChart"></canvas>
+
+<div id="results"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
