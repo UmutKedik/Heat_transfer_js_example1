@@ -1,4 +1,4 @@
-#☀️ Solar Water Tank Simulation (HTML/CSS/JS)
+☀️ # **Solar Tank Temperature Simulator**
 
 This small project is something play around with how a solar-heated water tank might behave over time.
 The goal wasn’t to create a perfect scientific model, but to have a simple browser-based simulation where you can change a few parameters and see how the tank temperature moves. Everything runs inside the browser—no backend, no frameworks, just plain JS + a chart.
