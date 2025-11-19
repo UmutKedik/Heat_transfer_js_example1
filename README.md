@@ -1,11 +1,11 @@
-☀️ Solar Water Tank Simulation (HTML/CSS/JS)
+                                                                            ☀️ Solar Water Tank Simulation (HTML/CSS/JS)
 
 This small project is something play around with how a solar-heated water tank might behave over time.
 The goal wasn’t to create a perfect scientific model, but to have a simple browser-based simulation where you can change a few parameters and see how the tank temperature moves. Everything runs inside the browser—no backend, no frameworks, just plain JS + a chart.
 
 I tried to keep the logic readable so I can adjust things later if needed.
 
-🔧 What the Simulation Does
+                                                                              🔧 What the Simulation Does
 
 The simulation estimates tank temperature changes based on:
 
@@ -35,7 +35,7 @@ new tank temperature
 
 Then it records one value per hour so the chart doesn’t explode.
 
-🖥️ Tech Used
+                                                                                🖥️ Tech Used
 
 HTML – simple form + layout
 
@@ -48,12 +48,12 @@ Chart.js – for the graph (temperature vs time)
 Everything is in three separate files for clarity:
 index.html, style.css, script.js.
 
-▶️ How to Run It
+                                                                                ▶️ How to Run It
 
 Just open index.html in any browser.
 No server required.
 
-📝 How to Use
+                                                                                📝 How to Use
 
 When the page loads:
 
@@ -80,7 +80,7 @@ total pump runtime
 temperature curve over the whole period
 
 
-Model Equations
+                                                                                  Model Equations
 
 Solar irradiance:
 I(t) = I_peak * sin( π * (t_day / t_sun) )
