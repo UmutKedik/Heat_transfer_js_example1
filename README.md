@@ -1,167 +1,80 @@
-🌞 Solar Thermal Tank Simulation (Web Interface)
+This small project is something I built to play around with how a solar-heated water tank might behave over time.
+The goal wasn’t to create a perfect scientific model, but to have a simple browser-based simulation where you can change a few parameters and see how the tank temperature moves. Everything runs inside the browser—no backend, no frameworks, just plain JS + a chart.
 
-This project provides a simple but practical simulation of a solar-heated water tank.
-The goal is to estimate how the tank temperature evolves over multiple days based on:
+I tried to keep the logic readable so I can adjust things later if needed.
 
-Solar panel area
+🔧 What the Simulation Does
 
-Tank volume
+The simulation estimates tank temperature changes based on:
 
-Daily average ambient temperature
+solar irradiance
 
-Daily sun exposure
+panel area
 
-Panel efficiency
+tank volume
 
-Heat-loss characteristics
+heat losses to environment
 
-Everything runs directly in the browser using HTML, CSS, and JavaScript.
-No backend or external dependencies are required except Chart.js for visualization.
+panel efficiency (drops slightly when tank gets hotter)
 
-🎯 Purpose
+average outside air temperature
 
-The simulation is not meant to be a full thermodynamic model.
-Instead, it aims to provide a lightweight engineering approximation that reacts to real-world changes:
+how many hours you want to simulate
 
-Solar irradiance varies throughout the day
+starting tank temperature
 
-Panel efficiency changes with temperature
+Every minute of simulated time, the code calculates:
 
-Heat loss increases as tank temperature rises
+incoming solar heat (only during sun hours)
 
-Pump runtime is tracked during sun hours
+heat loss to outside air
 
-Temperature data is sampled hourly for performance
+new tank temperature
 
-This makes the tool useful for quick feasibility checks, educational demos, or general solar-thermal calculations.
+Then it records one value per hour so the chart doesn’t explode.
 
-🧮 How the Model Works
-1. Time Step
+It’s obviously simplified (no stratification, no fluid dynamics, no real optical math), but good enough to visualize rough behavior.
 
-The simulation runs internally with a 60-second time step (1 minute).
-This keeps the temperature calculation smooth without causing performance issues.
+🖥️ Tech Used
 
-2. Solar Irradiance Curve
+HTML – simple form + layout
 
-Instead of assuming constant sunlight, irradiance is modeled using a half-sine curve:
+CSS – small dark theme
 
-irradiance = sin(π * progress) * peakValue
+JavaScript – all logic lives here
 
+Chart.js – for the graph (temperature vs time)
 
-This creates:
+Everything is in three separate files for clarity:
+index.html, style.css, script.js.
 
-Low radiation in the morning
+▶️ How to Run It
 
-Maximum radiation at midday
+Just open index.html in any browser.
+No server required.
 
-Symmetric decrease in the evening
+📝 How to Use
 
-3. Panel Efficiency
+When the page loads:
 
-Efficiency is slightly reduced at higher tank temperatures:
+Enter panel area (m²)
 
-eff = baseEff – 0.002 × (TankTemp – 25°C)
+Enter tank volume (L)
 
+Enter starting tank temperature
 
-A lower and upper bound is applied (0.50 – 0.90), preventing unrealistic values.
+Set average outdoor temp
 
-4. Heat Loss
+Set how many sunlight hours your area has
 
-Heat loss grows as the difference between tank and ambient temperature increases.
-A dynamic factor (up to +50%) is applied to simulate stronger heat rejection at high ΔT.
+Choose simulation time in hours
 
-5. Hourly Data Sampling
+Hit Run Simulation
 
-To keep the chart responsive, only one data point per hour is plotted,
-even though the physical simulation runs every minute.
+You’ll see:
 
-🖥️ User Interface
+final tank temperature
 
-The interface allows users to enter:
+total pump runtime
 
-Panel area (m²)
-
-Tank volume (L)
-
-Average daily temperature (°C)
-
-Sun exposure duration (hours)
-
-Days to simulate
-
-Base panel efficiency
-
-Peak irradiance (W/m²)
-
-Heat-loss coefficient
-
-Results include:
-
-Final tank temperature
-
-Total pump runtime
-
-Daily temperature summary table
-
-Temperature vs. time graph (Chart.js)
-
-All calculations occur in the browser — no backend required.
-
-🗂️ Project Structure
-/index.html      → UI layout
-/style.css       → Dark-themed styling
-/script.js       → Simulation logic + chart rendering
-
-
-The JavaScript file contains:
-
-Input validation
-
-Core simulation loop
-
-Hourly sampling system
-
-Daily summary generation
-
-Chart.js integration
-
-🛠️ Technologies Used
-
-HTML5
-
-CSS3 (custom dark theme)
-
-JavaScript (ES6)
-
-Chart.js for visualization
-
-There are no external frameworks.
-Everything is implemented manually to keep the project lightweight and easily auditable.
-
-📌 Example Output
-
-Final tank temperature after X days
-
-Pump runtime in hours
-
-Hour-by-hour temperature curve
-
-Daily temperature table
-
-The chart updates instantly when the user reruns the simulation with different parameters.
-
-⚠️ Assumptions & Limitations
-
-This model intentionally simplifies several real-world factors:
-
-Water is treated as perfectly mixed (uniform temperature).
-
-Weather conditions (clouds, wind, humidity) are not included.
-
-Solar panel orientation, tilt angle, and shading are not modeled.
-
-Pipe heat losses and pump efficiency are ignored.
-
-Irradiance is approximated with a sine curve—not measured data.
-
-Despite these limitations, the simulation still provides useful estimates for typical solar-thermal setups.
+temperature curve over the whole period
