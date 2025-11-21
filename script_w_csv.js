@@ -274,39 +274,37 @@ class TankSimulationApp {
         });
     }
 
-    // make simple csv from lastResult and download
+    // ---- JUNIOR STYLE CSV DOWNLOAD ----
     downloadCsv() {
         if (!this.lastResult) {
-            alert("No simulation data yet. Please run simulation first.");
+            alert("Once simule et, sonra indir.");
             return;
         }
 
-        const r = this.lastResult;
-        const rows = [];
-        rows.push("time_hours,tank_temp_C");
+        var r = this.lastResult;
+        var text = "time_hours,tank_temp_C\n";
 
-        const tArr = r.timeHours || [];
-        const tempArr = r.temps || [];
+        var times = r.timeHours || [];
+        var temps = r.temps || [];
 
-        for (let i = 0; i < tArr.length; i++) {
-            const t = tArr[i];
-            const temp = tempArr[i];
-            rows.push(t.toFixed(2) + "," + temp.toFixed(2));
+        for (var i = 0; i < times.length; i++) {
+            text += times[i].toFixed(2) + "," + temps[i].toFixed(2) + "\n";
         }
 
-        const csvText = rows.join("\n");
+        var blob = new Blob([text], { type: "text/csv" });
+        var link = document.createElement("a");
 
-        const blob = new Blob([csvText], { type: "text/csv" });
-        const url = URL.createObjectURL(blob);
+        link.href = URL.createObjectURL(blob);
+        link.download = "tank_simulation.csv";
 
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "tank_simulation.csv";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
 
-        URL.revokeObjectURL(url);
+        // url temizle (basit)
+        setTimeout(function () {
+            URL.revokeObjectURL(link.href);
+        }, 1000);
     }
 }
 
