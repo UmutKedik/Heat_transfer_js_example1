@@ -31,6 +31,9 @@ class SolarTankSimulator {
 
         const timeHours = [];
         const temps = [];
+        
+        const panelTemps = [];
+          let PanelTemp = this.Daily_avg_temp;
 
         // basic time loop
         while (t <= sim_time) {
@@ -44,6 +47,8 @@ class SolarTankSimulator {
                 if (sunShape < 0) { sunShape = 0; }
 
                 const currentIrradiance = this.Solar_peak * sunShape;
+                
+                PanelTemp = this.Daily_avg_temp + (currentIrradiance / this.Solar_peak) * 30;
 
                 // panel make less good when temp high
                 let panelEfficiency =
@@ -59,6 +64,9 @@ class SolarTankSimulator {
 
                 totalE += Heat_input_from_solar * this.dt; // W*s = J
             }
+            else {
+              PanelTemp = this.Daily_avg_temp; // <-- yeni
+          }
 
             // heat go out when tank hotter than air
             const tempDifference = TankTemp - this.Daily_avg_temp;
@@ -79,7 +87,9 @@ class SolarTankSimulator {
             // save only one point each hour for chart, otherwise too heavy
             if ((t % 3600) === 0) {
                 timeHours.push(t / 3600);
+                
                 temps.push(TankTemp);
+                 panelTemps.push(PanelTemp);
             }
 
             t += this.dt;
@@ -91,7 +101,8 @@ class SolarTankSimulator {
             hoursSimulated: this.Simulation_hours,
             timeHours: timeHours,
             temps: temps,
-            totalE_kWh: totalE / 3600000   // J> kWh
+            totalE_kWh: totalE / 3600000,   // J> kWh
+            panelTemps: panelTemps,
         };
     }
 }
@@ -114,12 +125,12 @@ class TankSimulationApp {
             btn.addEventListener("click", this.handleRunClick.bind(this));
         }
 
-        // hook csv download button
-        const dlBtn = document.getElementById("downloadCsvButton");
-        if (dlBtn) {
-            dlBtn.addEventListener("click", this.downloadCsv.bind(this));
+            // hook csv download button
+            const dlBtn = document.getElementById("downloadCsvButton");
+            if (dlBtn) {
+                dlBtn.addEventListener("click", this.downloadCsv.bind(this));
+            }
         }
-    }
 
     handleRunClick() {
         if (this.errorDiv) this.errorDiv.textContent = "";
@@ -127,10 +138,10 @@ class TankSimulationApp {
 
         const inputResult = this.readAndValidateInputs();
 
-        if (!inputResult.ok) {
-            if (this.errorDiv) this.errorDiv.textContent = inputResult.message;
-            return;
-        }
+            if (!inputResult.ok) {
+                    if (this.errorDiv) this.errorDiv.textContent = inputResult.message;
+                    return;
+            }
 
         const simParams = inputResult.values;
         const sim = new SolarTankSimulator(simParams);
@@ -140,7 +151,7 @@ class TankSimulationApp {
         this.lastResult = result;
 
         this.showResults(result);
-        this.drawTemperatureChart(result.timeHours, result.temps);
+        this.drawTemperatureChart(result.timeHours, result.temps,result.panelTemps);
     }
 
     readAndValidateInputs() {
@@ -238,7 +249,7 @@ class TankSimulationApp {
         }
     }
 
-    drawTemperatureChart(timeHours, temps) {
+    drawTemperatureChart(timeHours, temps,panelTemps) {
         const canvas = document.getElementById("tempChart");
         if (!canvas) return;
 
@@ -258,6 +269,11 @@ class TankSimulationApp {
                     label: "Tank Temperature (°C)",
                     data: temps,
                     fill: false
+                },
+                 {
+                  label: "Panel Temperature (°C)",
+                  data: panelTemps,
+                  fill: false
                 }]
             },
             options: {
@@ -294,7 +310,7 @@ class TankSimulationApp {
         }
 
         var r = this.lastResult;
-        var text = "time_hours,tank_temp_C\n";
+        var text = "time_hours,tank_temp_C\n,panel_temp_C\n";
 
         var times = r.timeHours || [];
         var temps = r.temps || [];
