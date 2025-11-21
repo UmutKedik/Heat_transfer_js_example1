@@ -80,33 +80,33 @@ class SolarTankSimulator {
             const tempDifference = TankTemp - this.Daily_avg_temp;
 
             // auto base heat-loss coefficient from area + insulation thickness
-            const lambda = 0.035; // W/mK (fixed average insulation conductivity)
+                const lambda = 0.035; // W/mK (fixed average insulation conductivity)
             let baseLossCoeff = (lambda / this.insulationThickness) * this.Tank_area; // W/K
 
             let tankHeatLoss = baseLossCoeff;
 
-            if (tempDifference > 0) {
-                let factor = (tempDifference / 40) * 0.5; // just guess curve
-                if (factor > 0.5) factor = 0.5;
-                tankHeatLoss = baseLossCoeff * (1 + factor);
-            }
+                if (tempDifference > 0)     {
+                    let factor = (tempDifference / 40) * 0.5; // just guess curve
+                    if (factor > 0.5) factor = 0.5;
+                    tankHeatLoss = baseLossCoeff * (1 + factor);
+                    }
 
             const Heat_loss_to_environment = tankHeatLoss * tempDifference;
 
             // very simple energy balance
             TankTemp += (Heat_input_from_solar - Heat_loss_to_environment) *
-                this.dt / (massWaterTank * this.heatCapacityWater);
+                    this.dt / (massWaterTank * this.heatCapacityWater);
 
             // save only one point each hour for chart, otherwise too heavy
-            if ((t % 3600) === 0) {
-                timeHours.push(t / 3600);
-                
-                temps.push(TankTemp);
-                 panelTemps.push(PanelTemp);
-            }
+                            if ((t % 3600) === 0) {
+                                timeHours.push(t / 3600);
+                                
+                                temps.push(TankTemp);
+                                 panelTemps.push(PanelTemp);
+                            }
 
-            t += this.dt;
-        }
+                t += this.dt;
+            }
 
         return {
             finalTemp: TankTemp,
