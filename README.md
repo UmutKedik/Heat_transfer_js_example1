@@ -50,6 +50,7 @@ index.html, style.css, script.js.
 
 ## ▶️ How to Run It
 
+After you extract whole files in same folder:
 Just open index.html in any browser.
 No server required.
 
