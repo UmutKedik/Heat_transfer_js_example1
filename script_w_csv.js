@@ -27,6 +27,8 @@ class SolarTankSimulator {
         let Pump_hours = 0;
         let t = 0;
 
+        let totalE = 0; // total collected energy (J)
+
         const timeHours = [];
         const temps = [];
 
@@ -54,6 +56,8 @@ class SolarTankSimulator {
                     this.Panel_area * currentIrradiance * panelEfficiency;
 
                 Pump_hours += this.dt / 3600;
+
+                totalE += Heat_input_from_solar * this.dt; // W*s = J
             }
 
             // heat go out when tank hotter than air
@@ -86,7 +90,8 @@ class SolarTankSimulator {
             pumpHours: Pump_hours,
             hoursSimulated: this.Simulation_hours,
             timeHours: timeHours,
-            temps: temps
+            temps: temps,
+            totalE_kWh: totalE / 3600000   // J> kWh
         };
     }
 }
@@ -216,12 +221,19 @@ class TankSimulationApp {
             r.pumpHours.toFixed(2) +
             " hours</b> in total.";
 
+        const eText =
+            "Total collected energy: <b>" +
+            r.totalE_kWh.toFixed(2) +
+            " kWh</b>";
+
         if (this.resultsDiv) {
             this.resultsDiv.innerHTML =
                 "<h2>Results</h2><p>" +
                 finalText +
                 "</p><p>" +
                 pumpText +
+                "</p><p>" +
+                eText +
                 "</p>";
         }
     }
@@ -274,7 +286,7 @@ class TankSimulationApp {
         });
     }
 
-    // download csv ----
+    // csv download
     downloadCsv() {
         if (!this.lastResult) {
             alert("Once simule et, sonra indir.");
@@ -301,7 +313,6 @@ class TankSimulationApp {
         link.click();
         document.body.removeChild(link);
 
-        // Clean URL
         setTimeout(function () {
             URL.revokeObjectURL(link.href);
         }, 1000);
